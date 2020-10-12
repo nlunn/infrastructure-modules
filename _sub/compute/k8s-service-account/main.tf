@@ -57,7 +57,7 @@ resource "kubernetes_service_account" "selfservice-deploy" {
   depends_on = [var.module_depends_on]  
 }
 
-resource "kubernetes_cluster_role_binding" "selfservice-deploy" {
+resource "kubernetes_role_binding" "selfservice-deploy" {
   metadata {
     name = "selfservice-deploy"
     namespace = "selfservice"
@@ -78,6 +78,18 @@ resource "kubernetes_cluster_role_binding" "selfservice-deploy" {
   provider = kubernetes
 
   depends_on = [var.module_depends_on]  
+}
+
+resource "kubernetes_cluster_role" "selfservice-deploy" {
+  metadata {
+    name = "selfservice-deploy"
+  }
+
+  rule {
+    api_groups = ["", "extensions", "networking.k8s.io", "apps"]
+    resources = ["pods", "configmaps", "secrets", "services", "deployments",  "deployments.extensions", "daemonsets", "statefulsets", "replicasets", "ingresses", "ingresses.extensions"]
+    verbs = ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
+  }
 }
 
 data "external" "get-token-selfservice-deploy" {
