@@ -280,6 +280,13 @@ module "k8s_service_account_store_secret" {
   key_value       = module.k8s_service_account.deploy_user_config
 }
 
+module "k8s_service_account_selfservice_store_secret" {
+  source          = "../../_sub/security/ssm-parameter-store"
+  key_name        = "/eks/${var.eks_cluster_name}/deploy_selfservice"
+  key_description = "Kube config file for selfservice deployment"
+  key_value       = module.k8s_service_account.selfservice_deploy_config
+}
+
 module "cloudwatch_agent_config_bucket" {
   source    = "../../_sub/storage/s3-bucket"
   deploy    = var.eks_worker_cloudwatch_agent_config_deploy
