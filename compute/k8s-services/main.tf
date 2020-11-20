@@ -335,3 +335,38 @@ module "monitoring_kube_prometheus_stack" {
   alertmanager_silence_namespaces = var.monitoring_alertmanager_silence_namespaces
 }
 
+# --------------------------------------------------
+# Traefik v2
+# --------------------------------------------------
+
+module "traefik_namespace" {
+  source    = "../../_sub/compute/k8s-namespace"
+  count     = var.traefik_namespace_deploy ? 1 : 0
+  name      = "traefik"
+}
+
+module "traefik_v2" {
+  source                  = "../../_sub/compute/helm-traefik"
+  count                   = var.traefik_v2_deploy ? 1 : 0
+  chart_version           = var.traefik_v2_chart_version
+  namespace               = module.traefik_namespace[0].name
+  replicas                = length(data.terraform_remote_state.cluster.outputs.eks_worker_subnet_ids)
+  priority_class          = "service-critical"
+  traefik_node_port       = var.traefik_v2_traefik_node_port
+  web_node_port           = var.traefik_v2_web_node_port
+}
+
+module "traefik_v2_alb_anon" {
+  source                = "../../_sub/compute/eks-alb"
+  deploy                = var.traefik_v2_alb_anon_deploy
+  name                  = "${var.eks_cluster_name}-traefik-v2-alb"
+  cluster_name          = var.eks_cluster_name
+  vpc_id                = data.aws_eks_cluster.eks.vpc_config[0].vpc_id
+  subnet_ids            = data.terraform_remote_state.cluster.outputs.eks_worker_subnet_ids
+  autoscaling_group_ids = data.terraform_remote_state.cluster.outputs.eks_worker_autoscaling_group_ids
+  alb_certificate_arn   = module.traefik_alb_cert.certificate_arn
+  nodes_sg_id           = data.terraform_remote_state.cluster.outputs.eks_cluster_nodes_sg_id
+  target_http_port      = module.traefik_v2[0].web_node_port
+  target_admin_port     = module.traefik_v2[0].traefik_node_port
+  health_check_path     = "/ping/"
+}

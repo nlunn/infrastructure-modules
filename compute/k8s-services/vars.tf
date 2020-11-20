@@ -318,6 +318,47 @@ variable "monitoring_alertmanager_silence_namespaces" {
 }
 
 # --------------------------------------------------
+# Traefik v2 (helm)
+# --------------------------------------------------
+
+variable "traefik_namespace_deploy" {
+  type = bool
+  description = "Traefik namespace deploy"
+  default = true
+}
+
+variable "traefik_v2_deploy" {
+  type = bool
+  description = "Traefik v2 helm deploy"
+  default = true
+}
+
+variable "traefik_v2_chart_version" {
+  type = string
+  description = "Traefik v2 helm chart version"
+  default = null
+}
+
+variable "traefik_v2_traefik_node_port" {
+  type = number
+  description = "Node port for Traefik admin/health interface"
+  default = 30190
+}
+
+variable "traefik_v2_web_node_port" {
+  type = number
+  description = "Node port for Traefik web traefik (http)"
+  default = 30180
+}
+
+variable "traefik_v2_alb_anon_deploy" {
+  type = bool
+  description = "Traefik v2 AWS alb depoloy"
+  default = true
+}
+
+
+# --------------------------------------------------
 # Unused variables - to provent TF warning/error:
 # Using a variables file to set an undeclared variable is deprecated and will
 # become an error in a future release. If you wish to provide certain "global"

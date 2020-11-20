@@ -1,0 +1,52 @@
+deployment:
+  replicas: ${replicas}
+
+logs:
+  general:
+    level: ${log_level}
+  access:
+    enabled: true
+    filters:
+      statuecodes: "300-399,400-499,500-599"
+      retryattempts: true
+      minduration: "60s"
+
+globalArguments: []
+
+additionalArguments:
+  - "--metrics.prometheus"
+  - "--accessLog.format=json"
+  - "--api.insecure"
+  - "--api"
+
+service:
+  type: NodePort
+  labels:
+    scrape-service-metrics: "true"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - ${name}
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+
+priorityClassName: ${priority_class}
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+
+ports:
+  traefik:
+    nodePort: ${traefik_node_port}
+    expose: true
+  web:
+    nodePort: ${web_node_port}
+  websecure:
+    expose: false
