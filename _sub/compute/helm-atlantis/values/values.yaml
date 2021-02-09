@@ -96,6 +96,9 @@ environmentSecrets:
 ingress:
   host: ${atlantis_ingress}
 
+service:
+  type: ClusterIP
+
 repoConfig: |
   ---
   repos:
@@ -117,4 +120,3 @@ repoConfig: |
       apply:
         steps:
         - run: exit 1
-
