@@ -58,6 +58,9 @@ resource "helm_release" "kube_prometheus_stack" {
 
     templatefile("${path.module}/values/kube-state-metrics.yaml", {
       kube_state_metrics_priorityclass = var.priority_class
+    }),
+
+    templatefile("${path.module}/values/kubelet.yaml", {
     })
   ]
 }
