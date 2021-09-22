@@ -47,3 +47,24 @@ variable "monitoring_targets" {
   description = "Complex object of what to monitor with Blackbox Exporter"
   default = []
 }
+
+variable "client_id" {
+  type = string
+  description = "Client ID for oauth2 for the authenticated ALB"
+}
+
+variable "client_secret" {
+  sensitive = true
+  type = string
+  description = "Client secret for oauth2 for the authenticated ALB"
+}
+
+variable "tenant_id" {
+  type = string
+  description = "Tenant ID for oauth2 for the authenticated ALB"
+}
+
+variable "config_secret_deploy" {
+  type = bool
+  description = "Deploy blackbox exporter config as secret to to secure sensitive Azure appreg credentials"
+}

@@ -24,3 +24,20 @@ resource "github_repository_file" "blackbox_exporter_helm_patch" {
   file       = "${local.helm_repo_path}/patch.yaml"
   content    = jsonencode(local.helm_patch)
 }
+
+resource "kubernetes_secret" "config" {
+  count = var.config_secret_deploy ? 1 : 0
+
+  metadata {
+    name = "blackbox-exporter-config"
+    namespace = var.namespace
+  }
+
+  data = {
+    "config" = templatefile("${path.module}/config.yaml", {
+      client_id = var.client_id
+      client_secret = var.client_secret
+      token_url = "https://login.microsoftonline.com/${var.tenant_id}/oauth2/v2.0/token"
+    })
+  }
+}
