@@ -62,7 +62,11 @@ locals {
         "deployment" = {
           "replicas" = var.replicas
         }
-        "configExistingSecretName" = var.config_secret_deploy ? "blackbox_exporter_config" : ""
+        "extraArgs" = [
+          "--log.level=debug"
+        ]
+        "configExistingSecretName" = "blackbox-exporter-config"
+        # "configExistingSecretName" = var.config_secret_deploy ? "blackbox_exporter_config" : ""
         "serviceMonitor" = {
           "enabled" = true
           "defaults" = {

@@ -64,7 +64,7 @@ variable "tenant_id" {
   description = "Tenant ID for oauth2 for the authenticated ALB"
 }
 
-variable "config_secret_deploy" {
-  type = bool
-  description = "Deploy blackbox exporter config as secret to to secure sensitive Azure appreg credentials"
-}
+# variable "config_secret_deploy" {
+#   type = bool
+#   description = "Deploy blackbox exporter config as secret to to secure sensitive Azure appreg credentials"
+# }

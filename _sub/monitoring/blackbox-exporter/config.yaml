@@ -25,6 +25,10 @@ modules:
     timeout: 5s
     http:
       follow_redirects: true
+      tls_config:
+        insecure_skip_verify: true
+      valid_status_codes:
+        - 402
       preferred_ip_protocol: ip4
       valid_http_versions:
         - HTTP/1.1

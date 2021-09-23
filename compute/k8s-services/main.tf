@@ -572,7 +572,6 @@ module "crossplane" {
 # --------------------------------------------------
 
 module "blackbox_exporter_flux_manifests" {
-  count = 0
   source              = "../../_sub/monitoring/blackbox-exporter"
   cluster_name        = var.eks_cluster_name
   helm_chart_version  = var.blackbox_exporter_helm_chart_version
@@ -581,7 +580,7 @@ module "blackbox_exporter_flux_manifests" {
   repo_branch         = var.blackbox_exporter_repo_branch
   monitoring_targets  = local.blackbox_exporter_monitoring_targets
 
-  config_secret_deploy = var.traefik_alb_auth_deploy
+  # config_secret_deploy = var.traefik_alb_auth_deploy
   client_id = try(module.traefik_alb_auth_appreg[0].application_id, "")
   client_secret = try(module.traefik_alb_auth_appreg[0].application_key, "")
   tenant_id = try(module.traefik_alb_auth_appreg[0].tenant_id, "")

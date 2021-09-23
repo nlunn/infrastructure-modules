@@ -26,7 +26,7 @@ resource "github_repository_file" "blackbox_exporter_helm_patch" {
 }
 
 resource "kubernetes_secret" "config" {
-  count = var.config_secret_deploy ? 1 : 0
+  # count = var.config_secret_deploy ? 1 : 0
 
   metadata {
     name = "blackbox-exporter-config"
@@ -34,7 +34,7 @@ resource "kubernetes_secret" "config" {
   }
 
   data = {
-    "config" = templatefile("${path.module}/config.yaml", {
+    "blackbox.yaml" = templatefile("${path.module}/config.yaml", {
       client_id = var.client_id
       client_secret = var.client_secret
       token_url = "https://login.microsoftonline.com/${var.tenant_id}/oauth2/v2.0/token"
